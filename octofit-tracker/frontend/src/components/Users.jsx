@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { getApiBaseUrl } from '../utils/api.js';
 
 export default function Users() {
   const [items, setItems] = useState([]);
@@ -7,9 +6,14 @@ export default function Users() {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    const codespaceName = import.meta.env.VITE_CODESPACE_NAME;
+    const apiBaseUrl = codespaceName
+      ? `https://${codespaceName}-8000.app.github.dev`
+      : 'http://localhost:8000';
+
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${getApiBaseUrl()}/api/users/`);
+        const response = await fetch(`${apiBaseUrl}/api/users/`);
         const payload = await response.json();
         const data = Array.isArray(payload) ? payload : payload.data ?? payload.results ?? [];
 
